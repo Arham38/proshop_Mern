@@ -1,127 +1,129 @@
 # ProShop eCommerce Platform
 
-> eCommerce platform built with the MERN stack & Redux.
+> Full-featured eCommerce application built using the MERN stack (MongoDB, Express, React, Node.js) and Redux.
 
-### THIS PROJECT IS DEPRECATED
-This project is no longer supported. The new project/course has been released. The code has been cleaned up and now uses Redux Toolkit. You can find the new version [HERE](https://github.com/bradtraversy/proshop-v2)
+Developed and maintained by **[Arham Bhatti](https://github.com/Arham38)**.
 
-![screenshot](https://github.com/bradtraversy/proshop_mern/blob/master/uploads/Screen%20Shot%202020-09-29%20at%205.50.52%20PM.png)
+![screenshot](./uploads/Screen%20Shot%202020-09-29%20at%205.50.52%20PM.png)
 
-## Features
+---
 
-- Full featured shopping cart
-- Product reviews and ratings
-- Top products carousel
-- Product pagination
-- Product search feature
-- User profile with orders
-- Admin product management
-- Admin user management
-- Admin Order details page
-- Mark orders as delivered option
-- Checkout process (shipping, payment method, etc)
-- PayPal / credit card integration
-- Database seeder (products & users)
+## 🚀 Features
 
-## Note on Issues
-Please do not post issues here that are related to your own code when taking the course. Add those in the Udemy Q/A. If you clone THIS repo and there are issues, then you can submit
+- **Shopping Cart**: Full-featured shopping cart with quantity selection and persistent storage.
+- **Product Reviews & Ratings**: Customers can submit star ratings and detailed reviews.
+- **Top Products Carousel**: Highlights top-rated products on the homepage.
+- **Search & Pagination**: Dynamic product search by keyword with paginated results.
+- **User Authentication**: Secure JWT authentication and password hashing with Bcrypt.
+- **User Profile**: Update profile details, change passwords, and view past order history.
+- **Admin Dashboard**:
+  - Manage and edit product catalog (create, update, delete).
+  - Manage user accounts and administrative privileges.
+  - View all customer orders and mark orders as delivered.
+- **Checkout Workflow**: Multi-step checkout (shipping address, payment method, order review).
+- **Payment Integration**: PayPal and credit card integration.
+- **Database Seeder**: Preloaded with sample products and users for quick local testing.
 
-## Usage
+---
 
-### ES Modules in Node
+## 🛠️ Tech Stack
 
-We use ECMAScript Modules in the backend in this project. Be sure to have at least Node v14.6+ or you will need to add the "--experimental-modules" flag.
+- **Frontend**: React (Hooks), Redux (Thunk), React Router, React Bootstrap
+- **Backend**: Node.js, Express.js (ES Modules)
+- **Database**: MongoDB, Mongoose ODM
+- **Authentication**: JSON Web Tokens (JWT), Bcrypt.js
+- **File Uploads**: Multer
+- **Deployment**: Render / Vercel + MongoDB Atlas
 
-Also, when importing a file (not a package), be sure to add .js at the end or you will get a "module not found" error
+---
 
-You can also install and setup Babel if you would like
+## 📋 Getting Started
 
-### Env Variables
+### Prerequisites
 
-Create a .env file in then root and add the following
+- [Node.js](https://nodejs.org/) (v16+)
+- [MongoDB](https://www.mongodb.com/) (Local or Atlas)
 
-```
+### 1. Environment Variables
+
+Create a `.env` file in the root directory and add the following variables:
+
+```env
 NODE_ENV = development
 PORT = 5000
-MONGO_URI = your mongodb uri
-JWT_SECRET = 'abc123'
-PAYPAL_CLIENT_ID = your paypal client id
+MONGO_URI = your_mongodb_connection_string
+JWT_SECRET = your_jwt_secret_key
+PAYPAL_CLIENT_ID = your_paypal_client_id
 ```
 
-### Install Dependencies (frontend & backend)
+*(You can also refer to `.env.example` for reference).*
 
-```
+### 2. Install Dependencies
+
+Install root (backend) and frontend dependencies:
+
+```bash
+# Install backend dependencies
 npm install
-cd frontend
-npm install
+
+# Install frontend dependencies
+npm install --prefix frontend
 ```
 
-### Run
+### 3. Seed Database (Optional)
 
-```
-# Run frontend (:3000) & backend (:5000)
-npm run dev
+You can seed sample users and products into your database:
 
-# Run backend only
-npm run server
-```
-
-## Build & Deploy
-
-```
-# Create frontend prod build
-cd frontend
-npm run build
-```
-
-There is a Heroku postbuild script, so if you push to Heroku, no need to build manually for deployment to Heroku
-
-### Seed Database
-
-You can use the following commands to seed the database with some sample users and products as well as destroy all data
-
-```
-# Import data
+```bash
+# Import sample data
 npm run data:import
 
 # Destroy data
 npm run data:destroy
 ```
 
+**Default Test Logins:**
+- **Admin:** `admin@example.com` / `123456`
+- **Customer:** `john@example.com` / `123456`
+- **Customer:** `jane@example.com` / `123456`
+
+### 4. Run the Application
+
+Run both backend (:5000) and frontend (:3000) concurrently:
+
+```bash
+npm run dev
 ```
-Sample User Logins
 
-admin@example.com (Admin)
-123456
+- Frontend runs at: `http://localhost:3000`
+- Backend API runs at: `http://localhost:5000`
 
-john@example.com (Customer)
-123456
+---
 
-jane@example.com (Customer)
-123456
+## 🌐 Free Deployment
+
+Step-by-step instructions for deploying free on **Render** with **MongoDB Atlas** are available in [DEPLOYMENT.md](DEPLOYMENT.md).
+
+```bash
+# Build frontend for production
+npm run build
+
+# Start production server
+npm start
 ```
 
+---
 
-## License
+## 👤 Author
 
-The MIT License
+**Arham Bhatti**
+- GitHub: [@Arham38](https://github.com/Arham38)
+- Repository: [proshop_Mern](https://github.com/Arham38/proshop_Mern)
 
-Copyright (c) 2020 Traversy Media https://traversymedia.com
+---
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+## 📄 License
 
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
+This project is licensed under the [MIT License](LICENSE).
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-THE SOFTWARE.
+Copyright (c) 2026 Arham Bhatti.
