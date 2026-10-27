@@ -26,8 +26,8 @@
       "handle": "filesystem"
     },
     {
-      "src": "/(.*)",
-      "dest": "frontend/$1"
+      "src": "/.*",
+      "dest": "/frontend/index.html"
     }
   ]
 }
