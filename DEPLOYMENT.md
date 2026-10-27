@@ -41,7 +41,6 @@ Yeh project free of cost deploy karne ka asaan tareeqa:
    - `NODE_ENV` = `production`
    - `MONGO_URI` = `apka_mongodb_atlas_connection_string`
    - `JWT_SECRET` = `koi_bhi_strong_secret_key`
-   - `PAYPAL_CLIENT_ID` = `apka_paypal_client_id` (optional testing ke liye)
 
 6. **Create Web Service** par click karein.
    - Render automatically build karega aur live URL de dega (e.g. `https://proshop-mern.onrender.com`).

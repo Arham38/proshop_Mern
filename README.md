@@ -21,7 +21,7 @@ Developed and maintained by **[Arham Bhatti](https://github.com/Arham38)**.
   - Manage user accounts and administrative privileges.
   - View all customer orders and mark orders as delivered.
 - **Checkout Workflow**: Multi-step checkout (shipping address, payment method, order review).
-- **Payment Integration**: PayPal and credit card integration.
+- **Payment Integration**: Cash on Delivery (COD), JazzCash, EasyPaisa, Bank Transfer / Raast, and Card payment.
 - **Database Seeder**: Preloaded with sample products and users for quick local testing.
 
 ---
@@ -53,7 +53,6 @@ NODE_ENV = development
 PORT = 5000
 MONGO_URI = your_mongodb_connection_string
 JWT_SECRET = your_jwt_secret_key
-PAYPAL_CLIENT_ID = your_paypal_client_id
 ```
 
 *(You can also refer to `.env.example` for reference).*

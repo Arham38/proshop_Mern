@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
-import { PayPalButton } from 'react-paypal-button-v2'
+import React, { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { Row, Col, ListGroup, Image, Card, Button } from 'react-bootstrap'
 import { useDispatch, useSelector } from 'react-redux'
@@ -19,8 +17,6 @@ import {
 const OrderScreen = ({ match, history }) => {
   const orderId = match.params.id
 
-  const [sdkReady, setSdkReady] = useState(false)
-
   const dispatch = useDispatch()
 
   const orderDetails = useSelector((state) => state.orderDetails)
@@ -35,8 +31,8 @@ const OrderScreen = ({ match, history }) => {
   const userLogin = useSelector((state) => state.userLogin)
   const { userInfo } = userLogin
 
-  if (!loading) {
-    //   Calculate prices
+  if (!loading && order) {
+    // Calculate prices
     const addDecimals = (num) => {
       return (Math.round(num * 100) / 100).toFixed(2)
     }
@@ -51,34 +47,22 @@ const OrderScreen = ({ match, history }) => {
       history.push('/login')
     }
 
-    const addPayPalScript = async () => {
-      const { data: clientId } = await axios.get('/api/config/paypal')
-      const script = document.createElement('script')
-      script.type = 'text/javascript'
-      script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`
-      script.async = true
-      script.onload = () => {
-        setSdkReady(true)
-      }
-      document.body.appendChild(script)
-    }
-
     if (!order || successPay || successDeliver || order._id !== orderId) {
       dispatch({ type: ORDER_PAY_RESET })
       dispatch({ type: ORDER_DELIVER_RESET })
       dispatch(getOrderDetails(orderId))
-    } else if (!order.isPaid) {
-      if (!window.paypal) {
-        addPayPalScript()
-      } else {
-        setSdkReady(true)
-      }
     }
-  }, [dispatch, orderId, successPay, successDeliver, order])
+  }, [dispatch, orderId, successPay, successDeliver, order, userInfo, history])
 
-  const successPaymentHandler = (paymentResult) => {
-    console.log(paymentResult)
-    dispatch(payOrder(orderId, paymentResult))
+  const paymentHandler = () => {
+    dispatch(
+      payOrder(orderId, {
+        id: `PAY_${(order.paymentMethod || 'PK').replace(/\s+/g, '_').toUpperCase()}_${Date.now()}`,
+        status: 'COMPLETED',
+        update_time: new Date().toISOString(),
+        email_address: (order.user && order.user.email) || (userInfo && userInfo.email),
+      })
+    )
   }
 
   const deliverHandler = () => {
@@ -105,7 +89,7 @@ const OrderScreen = ({ match, history }) => {
                 <a href={`mailto:${order.user.email}`}>{order.user.email}</a>
               </p>
               <p>
-                <strong>Address:</strong>
+                <strong>Address: </strong>
                 {order.shippingAddress.address}, {order.shippingAddress.city}{' '}
                 {order.shippingAddress.postalCode},{' '}
                 {order.shippingAddress.country}
@@ -195,34 +179,127 @@ const OrderScreen = ({ match, history }) => {
                   <Col>${order.totalPrice}</Col>
                 </Row>
               </ListGroup.Item>
+
               {!order.isPaid && (
                 <ListGroup.Item>
                   {loadingPay && <Loader />}
-                  {!sdkReady ? (
-                    <Loader />
-                  ) : (
-                    <PayPalButton
-                      amount={order.totalPrice}
-                      onSuccess={successPaymentHandler}
-                    />
+                  {order.paymentMethod === 'Cash on Delivery' && (
+                    <>
+                      <Message variant='info'>
+                        <strong>Cash on Delivery:</strong> Please pay{' '}
+                        <strong>${order.totalPrice}</strong> in cash to the rider
+                        upon delivery.
+                      </Message>
+                      <Button
+                        type='button'
+                        className='btn btn-block btn-success mt-2'
+                        onClick={paymentHandler}
+                      >
+                        {userInfo && userInfo.isAdmin
+                          ? 'Mark As Paid (Cash Received)'
+                          : 'Mark As Paid'}
+                      </Button>
+                    </>
                   )}
+
+                  {order.paymentMethod === 'JazzCash' && (
+                    <>
+                      <Message variant='info'>
+                        <strong>JazzCash Payment:</strong>
+                        <br />
+                        Please send <strong>${order.totalPrice}</strong> to:
+                        <br />
+                        <strong>Account: 0300-1234567</strong>
+                        <br />
+                        <strong>Title: ProShop Store</strong>
+                      </Message>
+                      <Button
+                        type='button'
+                        className='btn btn-block btn-warning mt-2'
+                        onClick={paymentHandler}
+                      >
+                        Confirm JazzCash Payment
+                      </Button>
+                    </>
+                  )}
+
+                  {order.paymentMethod === 'EasyPaisa' && (
+                    <>
+                      <Message variant='info'>
+                        <strong>EasyPaisa Payment:</strong>
+                        <br />
+                        Please send <strong>${order.totalPrice}</strong> to:
+                        <br />
+                        <strong>Account: 0345-1234567</strong>
+                        <br />
+                        <strong>Title: ProShop Store</strong>
+                      </Message>
+                      <Button
+                        type='button'
+                        className='btn btn-block btn-success mt-2'
+                        onClick={paymentHandler}
+                      >
+                        Confirm EasyPaisa Payment
+                      </Button>
+                    </>
+                  )}
+
+                  {order.paymentMethod === 'Bank Transfer' && (
+                    <>
+                      <Message variant='info'>
+                        <strong>Bank Transfer / Raast:</strong>
+                        <br />
+                        <strong>Bank:</strong> Meezan Bank
+                        <br />
+                        <strong>IBAN:</strong> PK00MEZN00012345678901
+                        <br />
+                        <strong>Raast ID:</strong> 03001234567
+                        <br />
+                        <strong>Title:</strong> ProShop Pakistan
+                      </Message>
+                      <Button
+                        type='button'
+                        className='btn btn-block btn-primary mt-2'
+                        onClick={paymentHandler}
+                      >
+                        Confirm Bank Transfer
+                      </Button>
+                    </>
+                  )}
+
+                  {order.paymentMethod !== 'Cash on Delivery' &&
+                    order.paymentMethod !== 'JazzCash' &&
+                    order.paymentMethod !== 'EasyPaisa' &&
+                    order.paymentMethod !== 'Bank Transfer' && (
+                      <>
+                        <Message variant='info'>
+                          Pay <strong>${order.totalPrice}</strong> via{' '}
+                          {order.paymentMethod || 'Credit/Debit Card'}.
+                        </Message>
+                        <Button
+                          type='button'
+                          className='btn btn-block btn-primary mt-2'
+                          onClick={paymentHandler}
+                        >
+                          Pay Now
+                        </Button>
+                      </>
+                    )}
                 </ListGroup.Item>
               )}
+
               {loadingDeliver && <Loader />}
-              {userInfo &&
-                userInfo.isAdmin &&
-                order.isPaid &&
-                !order.isDelivered && (
-                  <ListGroup.Item>
-                    <Button
-                      type='button'
-                      className='btn btn-block'
-                      onClick={deliverHandler}
-                    >
-                      Mark As Delivered
-                    </Button>
-                  </ListGroup.Item>
-                )}
+              {userInfo && userInfo.isAdmin && !order.isDelivered && (
+                <ListGroup.Item>
+                  <Button
+                    type='button'
+                    className='btn btn-block'
+                    onClick={deliverHandler}
+                  >
+                    Mark As Delivered
+                  </Button>
+                </ListGroup.Item>
+              )}
             </ListGroup>
           </Card>
         </Col>

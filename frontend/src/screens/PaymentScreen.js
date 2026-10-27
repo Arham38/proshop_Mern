@@ -13,7 +13,9 @@ const PaymentScreen = ({ history }) => {
     history.push('/shipping')
   }
 
-  const [paymentMethod, setPaymentMethod] = useState('PayPal')
+  const [paymentMethod, setPaymentMethod] = useState(
+    cart.paymentMethod || 'Cash on Delivery'
+  )
 
   const dispatch = useDispatch()
 
@@ -29,29 +31,66 @@ const PaymentScreen = ({ history }) => {
       <h1>Payment Method</h1>
       <Form onSubmit={submitHandler}>
         <Form.Group>
-          <Form.Label as='legend'>Select Method</Form.Label>
+          <Form.Label as='legend'>Select Payment Method</Form.Label>
           <Col>
             <Form.Check
               type='radio'
-              label='PayPal or Credit Card'
-              id='PayPal'
+              label='Cash on Delivery (COD)'
+              id='COD'
               name='paymentMethod'
-              value='PayPal'
-              checked
+              value='Cash on Delivery'
+              checked={paymentMethod === 'Cash on Delivery'}
               onChange={(e) => setPaymentMethod(e.target.value)}
+              className='my-3'
             ></Form.Check>
-            {/* <Form.Check
+
+            <Form.Check
               type='radio'
-              label='Stripe'
-              id='Stripe'
+              label='JazzCash'
+              id='JazzCash'
               name='paymentMethod'
-              value='Stripe'
+              value='JazzCash'
+              checked={paymentMethod === 'JazzCash'}
               onChange={(e) => setPaymentMethod(e.target.value)}
-            ></Form.Check> */}
+              className='my-3'
+            ></Form.Check>
+
+            <Form.Check
+              type='radio'
+              label='EasyPaisa'
+              id='EasyPaisa'
+              name='paymentMethod'
+              value='EasyPaisa'
+              checked={paymentMethod === 'EasyPaisa'}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              className='my-3'
+            ></Form.Check>
+
+            <Form.Check
+              type='radio'
+              label='Bank Transfer / Raast'
+              id='BankTransfer'
+              name='paymentMethod'
+              value='Bank Transfer'
+              checked={paymentMethod === 'Bank Transfer'}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              className='my-3'
+            ></Form.Check>
+
+            <Form.Check
+              type='radio'
+              label='Credit / Debit Card'
+              id='Card'
+              name='paymentMethod'
+              value='Credit/Debit Card'
+              checked={paymentMethod === 'Credit/Debit Card'}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              className='my-3'
+            ></Form.Check>
           </Col>
         </Form.Group>
 
-        <Button type='submit' variant='primary'>
+        <Button type='submit' variant='primary' className='mt-2'>
           Continue
         </Button>
       </Form>
